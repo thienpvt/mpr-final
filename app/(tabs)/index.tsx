@@ -1,65 +1,57 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import { Image, StyleSheet, Platform, TextInput } from 'react-native';
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { View } from 'react-native';
+import { useEffect, useState } from 'react';
+import React from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { StyledComponent } from 'nativewind';
+import Feather from '@expo/vector-icons/Feather';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import { useNotes } from '@/hooks/useContext';
+import { Note } from '@/models/Note';
+import NoteComponent from '@/components/NoteComponent';
 
-export default function HomeScreen() {
+export default function HomeScreen({ route }: any) {
+  const { value: notes, addNote, minusNote } = useNotes();
+  const color = useThemeColor({ light: 'black', dark: 'white' }, 'text');
+  const [focused, setFocused] = React.useState(false);
+  const [search, setSearch] = useState('');
+  const navigation = useNavigation();
+  useEffect(() => {
+    // console.log(search);
+    // console.log(notes);
+  }, [notes, search]);
+  navigation.setOptions({
+    headerTitle: () => (
+      <StyledComponent component={View} tw='flex flex-row justify-between w-full items-center'>
+        <StyledComponent component={ThemedText} type='subtitle'>Notes</StyledComponent>
+        {!focused ? (<StyledComponent component={Feather} name='search' size={24} color={color} tw='mr-1' onPress={() => {
+          setFocused(true);
+        }} />) :
+          (
+            <StyledComponent component={View} tw='flex flex-row items-center border-0 rounded-xl bg-slate-200 h-8'>
+              <StyledComponent onBlur={() => { setFocused(false); setSearch('') }} autoFocus={focused} component={TextInput} tw='w-48 px-2' placeholder='Search' onChangeText={(value) => setSearch(value)} />
+              <StyledComponent component={Feather} name='x' size={24} color={color} tw='mr-1' onPress={() => setFocused(false)} />
+            </StyledComponent>
+          )}
+      </StyledComponent>
+    ),
+  });
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
+      <StyledComponent component={ThemedView} tw=' bg-transparent' >
+        <StyledComponent component={ThemedText} type='defaultSemiBold' tw="text-cyan-400">{notes.length} notes</StyledComponent>
+      </StyledComponent>
+      {notes.map((note:Note) => {
+        return(
+          <NoteComponent {...note} key={note.id}/>
+        )
+      })}
     </ParallaxScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
