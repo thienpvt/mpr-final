@@ -9,59 +9,58 @@ import { StyledComponent } from 'nativewind';
 
 export default function Layout() {
   return (
-      <GestureHandlerRootView style={{ flex: 1 }} >
-        <Drawer
-          drawerContent={(props) => {
-            return (
-              <SafeAreaView style={{ flex: 1 }}>
-                {props.state.routes[props.state.index].name === 'index' && (
-                  <StyledComponent component={Text} tw="text-xl font-bold text-center text-teal-500" >Notes App</StyledComponent>
-                )}
-                <DrawerItemList {...props} />
-              </SafeAreaView>
-            );
-          }
-          }
-          screenOptions={{ drawerStatusBarAnimation: 'fade', headerTitleAlign: "center" }}
-        >
-          <Drawer.Screen
-            name="index" // This is the name of the page and must match the url from root
-            options={{
-              drawerLabel: 'Home',
-              title: 'Home',
-              headerTitleAlign: "left",
-              // header: () => <><Text>ádasđsa</Text></>,
-              drawerIcon: ({ color }) => <Feather name="home" size={28} color={color} />,
-            }}
-          />
-          <Drawer.Screen
-            name="folders" // This is the name of the page and must match the url from root
-            options={{
-              drawerLabel: 'Folders',
-              title: 'Folders',
-              drawerIcon: ({ color }) => <Feather name="folder" size={28} color={color} />,
-            }}
-          />
-          <Drawer.Screen
-            name="labels" // This is the name of the page and must match the url from root
-            options={{
-              drawerLabel: 'Labels',
-              title: 'Labels',
-              drawerIcon: ({ color }) => <Feather name="tag" size={28} color={color} />,
-            }}
+    <GestureHandlerRootView style={{ flex: 1 }} >
+      <Drawer
+        drawerContent={(props) => {
+          return (
+            <SafeAreaView style={{ flex: 1 }}>
+              <StyledComponent component={Text} tw="text-xl font-bold text-center text-teal-500" >Notes App</StyledComponent>
+              <DrawerItemList {...props} />
+            </SafeAreaView>
+          );
+        }
+        }
+        screenOptions={{ drawerStatusBarAnimation: 'fade', headerTitleAlign: "center" }}
+      >
+        <Drawer.Screen
+          // This is the name of the page and must match the url from root
+          name="(home)"
+          options={{
+            drawerLabel: 'Home',
+            headerShown: false,
+            // header: () => <><Text>ádasđsa</Text></>,
+            drawerIcon: ({ color }) => <Feather name="home" size={28} color={color} />,
+          }}
 
-          />
-          <Drawer.Screen
-            name="trash" // This is the name of the page and must match the url from root
-            options={{
-              drawerLabel: 'Trash',
-              title: 'Trash',
+        />
+        <Drawer.Screen
+          name="folders" // This is the name of the page and must match the url from root
+          options={{
+            drawerLabel: 'Folders',
+            title: 'Folders',
+            drawerIcon: ({ color }) => <Feather name="folder" size={28} color={color} />,
+          }}
+        />
+        <Drawer.Screen
+          name="labels" // This is the name of the page and must match the url from root
+          options={{
+            drawerLabel: 'Labels',
+            title: 'Labels',
+            drawerIcon: ({ color }) => <Feather name="tag" size={28} color={color} />,
+          }}
 
-              drawerIcon: ({ color }) => <Feather name="trash-2" size={28} color={color} />,
-            }}
-          />
-        </Drawer>
-      </GestureHandlerRootView>
+        />
+        <Drawer.Screen
+          name="trash" // This is the name of the page and must match the url from root
+          options={{
+            drawerLabel: 'Trash',
+            title: 'Trash',
+
+            drawerIcon: ({ color }) => <Feather name="trash-2" size={28} color={color} />,
+          }}
+        />
+      </Drawer>
+    </GestureHandlerRootView>
 
   );
 }

@@ -29,7 +29,7 @@ export default function NoteComponent(note: Note) {
                     {note.labelIds.map((labelId) => {
                          const label = labels.find((label) => label.id === labelId);
                          return (
-                              <StyledComponent component={ThemedView} tw='bg-neutral-300 rounded'>
+                              <StyledComponent component={ThemedView} tw='bg-neutral-300 rounded mr-1' key={label.id}>
                                    <StyledComponent component={ThemedText} type='label' tw='px-1'>{label?.name}</StyledComponent>
                               </StyledComponent>
                          )

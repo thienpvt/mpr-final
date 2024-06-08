@@ -10,7 +10,9 @@ import { ThemedView } from '@/components/ThemedView';
 export default function FoldersScreen() {
   return (
     <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}>
+      showButton={false}
+      pressButton={() => {}}
+      >
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Explore</ThemedText>
       </ThemedView>

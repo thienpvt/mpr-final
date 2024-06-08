@@ -1,5 +1,6 @@
 import type { PropsWithChildren, ReactElement } from 'react';
-import { StyleSheet, useColorScheme } from 'react-native';
+import { StyleSheet, useColorScheme, View } from 'react-native';
+import Ripple from 'react-native-material-ripple';
 import Animated, {
   interpolate,
   useAnimatedRef,
@@ -8,46 +9,39 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { ThemedView } from '@/components/ThemedView';
+import { ThemedText } from './ThemedText';
+import { StyledComponent } from 'nativewind';
+import { Feather } from '@expo/vector-icons';
 
 const HEADER_HEIGHT = 250;
 
 type Props = PropsWithChildren<{
-  headerBackgroundColor: { dark: string; light: string };
+  pressButton: () => void ;
+  showButton: boolean;
 }>;
 
 export default function ParallaxScrollView({
   children,
-  headerBackgroundColor,
+  pressButton = () => {} ,
+  showButton = false,
 }: Props) {
-  const colorScheme = useColorScheme() ?? 'light';
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
-  const scrollOffset = useScrollViewOffset(scrollRef);
-
-  const headerAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateY: interpolate(
-            scrollOffset.value,
-            [-HEADER_HEIGHT, 0, HEADER_HEIGHT],
-            [-HEADER_HEIGHT / 2, 0, HEADER_HEIGHT * 0.75]
-          ),
-        },
-        {
-          scale: interpolate(scrollOffset.value, [-HEADER_HEIGHT, 0, HEADER_HEIGHT], [2, 1, 1]),
-        },
-      ],
-    };
-  });
 
   return (
     <ThemedView style={styles.container}>
       <Animated.ScrollView ref={scrollRef} scrollEventThrottle={16}>
         <Animated.View style={styles.content}>
-        {children}
+          {children}
         </Animated.View>
       </Animated.ScrollView>
-    </ThemedView>
+      {showButton && (
+        <StyledComponent component={Ripple} tw='absolute bottom-10 right-10' rippleContainerBorderRadius={50} onPress={pressButton}>
+        <StyledComponent component={ThemedView} tw='rounded-full bg-red-200 w-16 h-16 items-center justify-center'>
+          <StyledComponent component={Feather} name='plus' size={28} color='red'></StyledComponent>
+        </StyledComponent>
+      </StyledComponent>
+      )}
+    </ThemedView >
   );
 }
 
@@ -56,7 +50,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'transparent',
   },
-
   content: {
     flex: 1,
     padding: 15,

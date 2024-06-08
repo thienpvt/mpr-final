@@ -1,40 +1,43 @@
 import { Image, StyleSheet, Platform, TextInput } from 'react-native';
-
-import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { View } from 'react-native';
 import { useEffect, useState } from 'react';
 import React from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { DrawerActions, useNavigation } from '@react-navigation/native';
 import { StyledComponent } from 'nativewind';
 import Feather from '@expo/vector-icons/Feather';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { useNotes } from '@/hooks/useContext';
 import { Note } from '@/models/Note';
 import NoteComponent from '@/components/NoteComponent';
+import Drawer from 'expo-router/build/layouts/Drawer';
 
-export default function HomeScreen({ route }: any) {
+
+
+export default function Home({ route }: any) {
   const { value: notes, addNote, minusNote } = useNotes();
   const color = useThemeColor({ light: 'black', dark: 'white' }, 'text');
-  const [focused, setFocused] = React.useState(false);
+  const [focused, setFocused] = useState(false);
   const [search, setSearch] = useState('');
   const navigation = useNavigation();
   useEffect(() => {
-    // console.log(search);
-    // console.log(notes);
+    console.log(search);
   }, [notes, search]);
-  navigation.setOptions({
+    navigation.setOptions({
     headerTitle: () => (
-      <StyledComponent component={View} tw='flex flex-row justify-between w-full items-center'>
-        <StyledComponent component={ThemedText} type='subtitle'>Notes</StyledComponent>
+      <StyledComponent component={View} tw='container flex flex-row justify-between items-center pr-10'>
+        <StyledComponent component={ThemedView} tw='flex flex-row items-center'>
+        <StyledComponent component={Feather} name='menu' size={24} color={color} tw='mr-1' onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())} />
+          <StyledComponent component={ThemedText} type='subtitle'>Notes</StyledComponent>
+        </StyledComponent>
         {!focused ? (<StyledComponent component={Feather} name='search' size={24} color={color} tw='mr-1' onPress={() => {
           setFocused(true);
         }} />) :
           (
             <StyledComponent component={View} tw='flex flex-row items-center border-0 rounded-xl bg-slate-200 h-8'>
-              <StyledComponent onBlur={() => { setFocused(false); setSearch('') }} autoFocus={focused} component={TextInput} tw='w-48 px-2' placeholder='Search' onChangeText={(value) => setSearch(value)} />
+              <StyledComponent  autoFocus={focused} component={TextInput} tw='w-48 px-2' placeholder='Search' onChangeText={(value) => setSearch(value)} onBlur={() => console.log("Focus Lost")}/>
               <StyledComponent component={Feather} name='x' size={24} color={color} tw='mr-1' onPress={() => setFocused(false)} />
             </StyledComponent>
           )}
@@ -43,7 +46,9 @@ export default function HomeScreen({ route }: any) {
   });
   return (
     <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}>
+      showButton={true}
+      pressButton={() => {}}
+      >
       <StyledComponent component={ThemedView} tw=' bg-transparent' >
         <StyledComponent component={ThemedText} type='defaultSemiBold' tw="text-cyan-400">{notes.length} notes</StyledComponent>
       </StyledComponent>
@@ -52,6 +57,7 @@ export default function HomeScreen({ route }: any) {
           <NoteComponent {...note} key={note.id}/>
         )
       })}
+
     </ParallaxScrollView>
   );
 }
