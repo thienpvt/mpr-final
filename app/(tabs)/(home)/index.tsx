@@ -18,16 +18,17 @@ import Drawer from 'expo-router/build/layouts/Drawer';
 
 export default function Home({ route }: any) {
   const { value: notes, addNote, minusNote } = useNotes();
-  const color = useThemeColor({ light: 'black', dark: 'white' }, 'text');
+  const color = useThemeColor({ light: 'black', dark: 'white' },'icon');
   const [focused, setFocused] = useState(false);
   const [search, setSearch] = useState('');
   const navigation = useNavigation();
   useEffect(() => {
     console.log(search);
   }, [notes, search]);
+  useEffect(() => {
     navigation.setOptions({
     headerTitle: () => (
-      <StyledComponent component={View} tw='container flex flex-row justify-between items-center pr-10'>
+      <StyledComponent component={View} tw='flex-1 flex-row justify-between items-center pr-10 ml-[-4]'>
         <StyledComponent component={ThemedView} tw='flex flex-row items-center'>
         <StyledComponent component={Feather} name='menu' size={24} color={color} tw='mr-1' onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())} />
           <StyledComponent component={ThemedText} type='subtitle'>Notes</StyledComponent>
@@ -44,6 +45,7 @@ export default function Home({ route }: any) {
       </StyledComponent>
     ),
   });
+  },[navigation]);
   return (
     <ParallaxScrollView
       showButton={true}
