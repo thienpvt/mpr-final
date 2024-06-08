@@ -5,8 +5,8 @@ export class Note {
           public labelIds: number[],
           public content: String,
           public updateAt: Date,
-          public isBookmarked: String,
-          public folderId: number,
+          public isBookmarked: boolean,
+          public folderId: number | null,
      ) {
      }
 }

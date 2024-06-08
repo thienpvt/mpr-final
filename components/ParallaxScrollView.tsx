@@ -1,47 +1,88 @@
-import type { PropsWithChildren, ReactElement } from 'react';
-import { StyleSheet, useColorScheme, View } from 'react-native';
+import { useEffect, useState, type PropsWithChildren, type ReactElement } from 'react';
+import { Keyboard, KeyboardAvoidingView, Platform, StyleSheet, useColorScheme, View } from 'react-native';
 import Ripple from 'react-native-material-ripple';
 import Animated, {
-  interpolate,
   useAnimatedRef,
   useAnimatedStyle,
-  useScrollViewOffset,
+  useSharedValue,
+  withSpring,
+  withTiming,
 } from 'react-native-reanimated';
 
 import { ThemedView } from '@/components/ThemedView';
-import { ThemedText } from './ThemedText';
+
 import { StyledComponent } from 'nativewind';
 import { Feather } from '@expo/vector-icons';
 
-const HEADER_HEIGHT = 250;
 
 type Props = PropsWithChildren<{
-  pressButton: () => void ;
-  showButton: boolean;
+  pressButton?: () => void;
+  showButton?: boolean;
+  icon?: 'plus' | 'check';
 }>;
 
 export default function ParallaxScrollView({
   children,
-  pressButton = () => {} ,
+  pressButton = () => { },
   showButton = false,
+  icon = 'plus',
 }: Props) {
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
+  const buttonPosition = useSharedValue(30);
 
+  const animatedButtonStyles = useAnimatedStyle(() => {
+    return {
+      bottom: buttonPosition.value,
+    };
+  });
+
+  const _keyboardDidShow = (e:any) => {
+    buttonPosition.value = withSpring(
+      e.endCoordinates.height + 30,
+      {
+        damping: 15,
+        stiffness: 150,
+        mass: 1,
+      }
+    );
+  };
+
+  const _keyboardDidHide = () => {
+    buttonPosition.value = withTiming(30, { duration: 250 });
+  };
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      _keyboardDidShow,
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      _keyboardDidHide,
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
   return (
-    <ThemedView style={styles.container}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}
+    >
       <Animated.ScrollView ref={scrollRef} scrollEventThrottle={16}>
         <Animated.View style={styles.content}>
           {children}
         </Animated.View>
       </Animated.ScrollView>
       {showButton && (
-        <StyledComponent component={Ripple} tw='absolute bottom-10 right-10' rippleContainerBorderRadius={50} onPress={pressButton}>
-        <StyledComponent component={ThemedView} tw='rounded-full bg-red-200 w-16 h-16 items-center justify-center'>
-          <StyledComponent component={Feather} name='plus' size={28} color='red'></StyledComponent>
+        <StyledComponent component={ThemedView} tw='rounded-full bg-red-200 w-16 h-16 items-center justify-center absolute right-8' style={animatedButtonStyles}>
+          <StyledComponent component={Ripple} rippleContainerBorderRadius={50} onPress={pressButton} rippleSize={100} tw='flex-1 w-full justify-center items-center'>
+            <StyledComponent component={Feather} name={icon} size={28} color='red'></StyledComponent>
+          </StyledComponent>
         </StyledComponent>
-      </StyledComponent>
       )}
-    </ThemedView >
+    </KeyboardAvoidingView >
   );
 }
 

@@ -25,3 +25,7 @@ export function useLabels() {
 export function useFolders() {
      return useContext(AppContext).folders;
 }
+
+export function useTrash() {
+     return useContext(AppContext).trash;
+}

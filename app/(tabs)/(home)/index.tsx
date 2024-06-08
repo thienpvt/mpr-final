@@ -1,10 +1,9 @@
-import { Image, StyleSheet, Platform, TextInput } from 'react-native';
+import { TextInput } from 'react-native';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { View } from 'react-native';
 import { useEffect, useState } from 'react';
-import React from 'react';
 import { DrawerActions, useNavigation } from '@react-navigation/native';
 import { StyledComponent } from 'nativewind';
 import Feather from '@expo/vector-icons/Feather';
@@ -12,7 +11,6 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { useNotes } from '@/hooks/useContext';
 import { Note } from '@/models/Note';
 import NoteComponent from '@/components/NoteComponent';
-import Drawer from 'expo-router/build/layouts/Drawer';
 
 
 
@@ -21,9 +19,8 @@ export default function Home({ route }: any) {
   const color = useThemeColor({ light: 'black', dark: 'white' },'icon');
   const [focused, setFocused] = useState(false);
   const [search, setSearch] = useState('');
-  const navigation = useNavigation();
+  const navigation :any = useNavigation();
   useEffect(() => {
-    console.log(search);
   }, [notes, search]);
   useEffect(() => {
     navigation.setOptions({
@@ -45,11 +42,11 @@ export default function Home({ route }: any) {
       </StyledComponent>
     ),
   });
-  },[navigation]);
+  },[navigation,focused,search,notes]);
   return (
     <ParallaxScrollView
       showButton={true}
-      pressButton={() => {}}
+      pressButton={() => navigation.navigate('addNote')}
       >
       <StyledComponent component={ThemedView} tw=' bg-transparent' >
         <StyledComponent component={ThemedText} type='defaultSemiBold' tw="text-cyan-400">{notes.length} notes</StyledComponent>
