@@ -2,13 +2,14 @@ import { ThemedText } from "@/components/ThemedText";
 import Ripple from 'react-native-material-ripple';
 import { useNavigation } from "expo-router";
 import { StyledComponent } from "nativewind";
-import { useEffect, useState } from "react";
-import { View, Text, TextInput, Alert } from "react-native";
+import { useEffect, useState, useCallback, useRef, useMemo  } from "react";
+import { View, Text, TextInput, Alert, Button } from "react-native";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedView } from "@/components/ThemedView";
 import { useNotes, useTrash } from "@/hooks/useContext";
 import { Note } from "@/models/Note";
 import CenteredAlert from "@/components/CenteredAlert";
+import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 
 export default function AddNote() {
      const { value: notes, addNote, minusNote } = useNotes();
@@ -17,21 +18,15 @@ export default function AddNote() {
      const getId = () => {
           return trash.length > 0 ? (trash[trash.length - 1].id>notes[notes.length-1].id?trash[trash.length-1].id:notes[notes.length-1].id)+1 : notes.length > 0 ? notes[notes.length - 1].id + 1 : 1;
      }
-     const tmpNote: Note = {
-          id: getId(),
-          content: '',
-          labelIds: [],
-          updateAt: new Date(),
-          color: '',
-          isBookmarked: false,
-          folderId: null
-     }
+     const tmpNote: Note =new Note( getId(), 'white', [], '', new Date(), false, null);
+     
      const navigation: any = useNavigation();
      const handleSubmit = (note: Note) => {
           if (note.content.trim() === '') {
                setAlertVisible(true);
                return;
           }
+          tmpNote.updateAt = new Date();
           addNote(note);
           navigation.goBack();
      }
@@ -53,7 +48,7 @@ export default function AddNote() {
                icon="check"
                pressButton={() => handleSubmit(tmpNote)}
           >
-               <StyledComponent component={TextInput} tw='bg-transparent' placeholder="Enter something" onChangeText={(val) => { tmpNote.content = val }}>
+               <StyledComponent component={TextInput} multiline={true} tw='bg-transparent p-2 w-full text-gray-500' placeholder="Enter something" onChangeText={(val) => { tmpNote.content = val }}>
                </StyledComponent>
                <CenteredAlert
                     isVisible={alertVisible}

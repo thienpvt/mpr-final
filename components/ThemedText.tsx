@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   hours:{
     fontSize: 14,
     lineHeight: 24,
-    color: '#c8c8c8',
+    color: 'rgb(107 114 128)',
   },
   label:{
     fontSize: 16,

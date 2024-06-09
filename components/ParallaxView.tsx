@@ -1,5 +1,5 @@
-import { useEffect, useState, type PropsWithChildren, type ReactElement } from 'react';
-import { Keyboard, KeyboardAvoidingView, Platform, StyleSheet, useColorScheme, View, Text, Button } from 'react-native';
+import { useEffect, useState, type PropsWithChildren, type ReactElement,  } from 'react';
+import { Keyboard, KeyboardAvoidingView, Platform, StyleSheet, useColorScheme, View, Text, Button, TouchableWithoutFeedback, useWindowDimensions } from 'react-native';
 import Ripple from 'react-native-material-ripple';
 import Animated, {
   useAnimatedRef,
@@ -10,9 +10,10 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import { ThemedView } from '@/components/ThemedView';
-
+import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { StyledComponent } from 'nativewind';
 import { Feather } from '@expo/vector-icons';
+import { ThemedText } from './ThemedText';
 
 
 type Props = PropsWithChildren<{
@@ -21,27 +22,27 @@ type Props = PropsWithChildren<{
   icon?: 'plus' | 'check';
 }>;
 
-export default function ParallaxScrollView({
+export default function ParallaxView({
   children,
   pressButton = () => { },
   showButton = false,
   icon = 'plus',
 }: Props) {
-  const scrollRef = useAnimatedRef<Animated.ScrollView>();
   const buttonPosition = useSharedValue(30);
-
+   
   const animatedButtonStyles = useAnimatedStyle(() => {
     return {
       bottom: buttonPosition.value,
     };
   });
-
-  const _keyboardDidShow = (e:any) => {
+  const _keyboardDidShow = (e: any) => {
+    const offset = e.endCoordinates.height;
+    console.log(offset);
     buttonPosition.value = withSpring(
       e.endCoordinates.height + 30,
       {
         damping: 15,
-        stiffness:150,
+        stiffness: 150,
         mass: 2,
       }
     );
@@ -66,23 +67,26 @@ export default function ParallaxScrollView({
     };
   }, []);
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}
+    <TouchableWithoutFeedback onPress={()=>{
+      Keyboard.dismiss();
+    }}
     >
-      <Animated.ScrollView ref={scrollRef} scrollEventThrottle={16}>
-        <View  style={styles.content}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.container}
+      >
+        <View style={styles.content} >
           {children}
         </View>
-      </Animated.ScrollView>
-      {showButton && (
-        <StyledComponent component={ThemedView} tw='rounded-full bg-red-200 w-16 h-16 items-center justify-center absolute right-8' style={animatedButtonStyles}>
-          <StyledComponent component={Ripple} rippleContainerBorderRadius={50} onPress={pressButton} rippleSize={100} tw='flex-1 w-full justify-center items-center'>
-            <StyledComponent component={Feather} name={icon} size={28} color='red'></StyledComponent>
+        {showButton && (
+          <StyledComponent component={ThemedView} tw='rounded-full bg-red-200 w-16 h-16 items-center justify-center absolute right-8' style={animatedButtonStyles}>
+            <StyledComponent component={Ripple} rippleContainerBorderRadius={50} onPress={pressButton} rippleSize={100} tw='flex-1 w-full justify-center items-center'>
+              <StyledComponent component={Feather} name={icon} size={28} color='red'></StyledComponent>
+            </StyledComponent>
           </StyledComponent>
-        </StyledComponent>
-      )}
-    </KeyboardAvoidingView >
+        )}
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback >
   );
 }
 
@@ -95,7 +99,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 15,
     gap: 16,
-    overflow: 'hidden',
+    // overflow: 'hidden',
     // backgroundColor:'red',
   },
 });

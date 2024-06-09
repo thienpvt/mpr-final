@@ -9,33 +9,17 @@ import { useNavigation } from "expo-router";
 export default function NoteComponent(note: Note) {
      const navigation :any = useNavigation();
      const { value: labels, addLabel, minusLabel } = useLabels();
-     const calculateTime = (date: Date) => {
-          const now = new Date();
-          const diff = now.getTime() - date.getTime();
-          const minutes = Math.floor(diff / 1000 / 60);
-          if (minutes < 60) return `${minutes} mins ago`;
-          const hours = Math.floor(minutes / 60);
-          if (hours < 24) return `${hours} hrs ago`;
-          const days = Math.floor(hours / 24);
-          if (days < 7) return `${days} days ago`;
-          const weeks = Math.floor(days / 7);
-          if (weeks < 4) return `${weeks} weeks ago`;
-          const months = Math.floor(weeks / 4);
-          if (months < 12) return `${months} months ago`;
-          const years = Math.floor(months / 12);
-          return `${years} years ago`;
-     }
      return (
           <StyledComponent component={Ripple} onPress={() => navigation.navigate('editNote',{editNote: JSON.stringify(note)})} rippleContainerBorderRadius={5} rippleColor="rgb(249 168 212)">
                <StyledComponent component={ThemedView} tw='rounded p-3'>
                     <StyledComponent component={ThemedText} type='hours'>{ }
-                         {calculateTime(note.updateAt)}
+                         {note.calculateTime()}
                     </StyledComponent>
                     <StyledComponent component={ThemedView} tw='flex flex-row'>
                          {note.labelIds.map((labelId) => {
                               const label = labels.find((label) => label.id === labelId);
                               return (
-                                   <StyledComponent component={ThemedView} tw='bg-neutral-300 rounded mr-1' key={label?.id}>
+                                   <StyledComponent component={ThemedView} tw='bg-neutral-300 rounded mr-1 p-1' key={label?.id}>
                                         <StyledComponent component={ThemedText} type='label' tw='px-1'>{label?.name}</StyledComponent>
                                    </StyledComponent>
                               )

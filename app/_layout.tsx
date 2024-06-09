@@ -9,7 +9,7 @@ import { useAppContext } from '@/hooks/useContext';
 import { Note } from '@/models/Note';
 import { Label } from '@/models/Label';
 import { Folder } from '@/models/Folder';
-import {Notes, Labels, Folders, Trash} from '@/utils/dummyData';
+import {Notes, Labels, Folders, Trash, Colors} from '@/utils/dummyData';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -20,6 +20,7 @@ export default function RootLayout() {
   const [labels1, setLabels] = useState<Label[]>(Labels);
   const [folders, setFolders] = useState<Folder[]>(Folders);
   const [trashes1, setTrash] = useState<Note[]>(Trash);
+  const [colors] = useState<string[]>(Colors);
 
   const addNote = (note: Note) => {
     setNotes([...notes1, note]);
@@ -27,6 +28,10 @@ export default function RootLayout() {
 
   const minusNote = (note: Note) => {
     setNotes(notes1.filter(n => n.id !== note.id));
+  }
+
+  const updateNote = (note: Note) => {
+    setNotes(notes1.map(n => n.id === note.id ? note : n));
   }
 
   const addLabel = (label: Label) => {
@@ -37,12 +42,20 @@ export default function RootLayout() {
     setLabels(labels1.filter(l => l !== label));
   }
 
+  const updateLabel = (label: Label) => {
+    setLabels(labels1.map(l => l.id === label.id ? label : l));
+  }
+
   const addFolder = (folder: Folder) => {
     setFolders([...folders, folder]);
   }
 
   const minusFolder = (folder: Folder) => {
     setFolders(folders.filter(f => f !== folder));
+  }
+
+  const updateFolder = (folder: Folder) => {
+    setFolders(folders.map(f => f.id === folder.id ? folder : f));
   }
 
   const addTrash = (note: Note) => {
@@ -52,6 +65,11 @@ export default function RootLayout() {
   const minusTrash = (note: Note) => {
     setTrash(trashes1.filter(n => n.id !== note.id));
   }
+
+  const updateTrash = (note: Note) => {
+    setTrash(trashes1.map(n => n.id === note.id ? note : n));
+  }
+
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
@@ -70,16 +88,19 @@ export default function RootLayout() {
   return (
     <Context.Provider value={{
       notes: {
-        value: notes1, addNote, minusNote
+        value: notes1, addNote, minusNote, updateNote
       },
       labels: {
-        value: labels1, addLabel, minusLabel
+        value: labels1, addLabel, minusLabel, updateLabel
       },
       folders: {
-        value: folders, addFolder, minusFolder
+        value: folders, addFolder, minusFolder, updateFolder
       },
       trash: {
-        value: trashes1, addTrash, minusTrash
+        value: trashes1, addTrash, minusTrash, updateTrash
+      },
+      colors: {
+        value: colors
       }
     }}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
