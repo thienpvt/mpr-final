@@ -37,7 +37,6 @@ export default function ParallaxView({
   });
   const _keyboardDidShow = (e: any) => {
     const offset = e.endCoordinates.height;
-    console.log(offset);
     buttonPosition.value = withSpring(
       e.endCoordinates.height + 30,
       {
@@ -97,7 +96,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    padding: 15,
+
     gap: 16,
     // overflow: 'hidden',
     // backgroundColor:'red',

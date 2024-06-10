@@ -1,101 +1,51 @@
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { StyleSheet, Image, Platform } from 'react-native';
-
-import { Collapsible } from '@/components/Collapsible';
-import { ExternalLink } from '@/components/ExternalLink';
+import { TextInput } from 'react-native';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { DrawerActions, useNavigation, } from '@react-navigation/native';
+import { StyledComponent } from 'nativewind';
+import Feather from '@expo/vector-icons/Feather';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import { useFolders, useNotes, useTrash } from '@/hooks/useContext';
+import { Note } from '@/models/Note';
+import NoteComponent from '@/components/NoteComponent';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import Ripple from 'react-native-material-ripple';
+
+
 
 export default function TrashScreen() {
+  const { value: notes, addTrash, minusTrash } = useTrash();
+  const navigation: any = useNavigation();
+  const restore = () => {
+    notes.forEach((note) => {
+      addTrash(note);
+    });
+  }
   return (
     <ParallaxScrollView
-      >
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image source={require('@/assets/images/react-logo.png')} style={{ alignSelf: 'center' }} />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Custom fonts">
-        <ThemedText>
-          Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText> to see how to load{' '}
-          <ThemedText style={{ fontFamily: 'SpaceMono' }}>
-            custom fonts such as this one.
-          </ThemedText>
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user's current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful <ThemedText type="defaultSemiBold">react-native-reanimated</ThemedText> library
-          to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
+      showButton={true}
+      pressButton={() => navigation.navigate('addNote')}
+    >
+      <StyledComponent component={ThemedView} tw='flex flex-row bg-transparent items-center' >
+        <StyledComponent component={ThemedText} type='defaultSemiBold' tw="text-cyan-400 w-1/2">{notes.length} notes in trash</StyledComponent>
+        <StyledComponent component={ThemedView}  tw="text-cyan-400 w-1/2 flex flex-row space-x-2 justify-end bg-transparent"> 
+          <StyledComponent component={Ripple} onPress={() => restore()} tw="items-center  bg-slate-200 p-2 px-4 rounded" rippleContainerBorderRadius={50}>
+            <StyledComponent component={ThemedText} >Restore</StyledComponent>
+          </StyledComponent>
+          <StyledComponent component={Ripple} onPress={() => restore()} tw="items-center bg-red-500 p-2 px-4 rounded" rippleContainerBorderRadius={50}>
+            <StyledComponent component={ThemedText} tw='text-white'>Empty</StyledComponent>
+          </StyledComponent>
+        </StyledComponent>
+      </StyledComponent>
+      {notes.map((note: Note) => {
+        return (
+          <NoteComponent {...note} key={note.id} />
+        )
+      })}
     </ParallaxScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
-  },
-  titleContainer: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-});

@@ -4,6 +4,7 @@ import { SafeAreaView, Text, TextInput, View } from 'react-native';
 import Feather from '@expo/vector-icons/Feather';
 import { DrawerItemList } from '@react-navigation/drawer';
 import { StyledComponent } from 'nativewind';
+import { Ionicons } from '@expo/vector-icons';
 
 
 
@@ -34,9 +35,10 @@ export default function Layout() {
 
         />
         <Drawer.Screen
-          name="folders" // This is the name of the page and must match the url from root
+          name="(kfolders)" // This is the name of the page and must match the url from root
           options={{
             drawerLabel: 'Folders',
+            headerShown: false,
             title: 'Folders',
             drawerIcon: ({ color }) => <Feather name="folder" size={28} color={color} />,
           }}
@@ -48,14 +50,12 @@ export default function Layout() {
             title: 'Labels',
             drawerIcon: ({ color }) => <Feather name="tag" size={28} color={color} />,
           }}
-
         />
-        <Drawer.Screen
+          <Drawer.Screen
           name="trash" // This is the name of the page and must match the url from root
           options={{
             drawerLabel: 'Trash',
             title: 'Trash',
-
             drawerIcon: ({ color }) => <Feather name="trash-2" size={28} color={color} />,
           }}
         />

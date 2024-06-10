@@ -19,6 +19,7 @@ type Props = PropsWithChildren<{
   pressButton?: () => void;
   showButton?: boolean;
   icon?: 'plus' | 'check';
+  padding?: boolean;
 }>;
 
 export default function ParallaxScrollView({
@@ -26,6 +27,7 @@ export default function ParallaxScrollView({
   pressButton = () => { },
   showButton = false,
   icon = 'plus',
+  padding = true,
 }: Props) {
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
   const buttonPosition = useSharedValue(30);
@@ -71,9 +73,12 @@ export default function ParallaxScrollView({
       style={styles.container}
     >
       <Animated.ScrollView ref={scrollRef} scrollEventThrottle={16}>
-        <View  style={styles.content}>
+        {padding?(<View  style={styles.content}>
           {children}
-        </View>
+        </View>):
+        (<View  style={styles.content2}>
+          {children}
+        </View>)}
       </Animated.ScrollView>
       {showButton && (
         <StyledComponent component={ThemedView} tw='rounded-full bg-red-200 w-16 h-16 items-center justify-center absolute right-8' style={animatedButtonStyles}>
@@ -95,6 +100,13 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 15,
     gap: 16,
+    overflow: 'hidden',
+    // backgroundColor:'red',
+  },
+  content2: {
+    flex: 1,
+    // padding: 15,
+    // gap: 16,
     overflow: 'hidden',
     // backgroundColor:'red',
   },

@@ -5,7 +5,7 @@ import { StyledComponent } from "nativewind";
 import { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import { View, Text, TextInput, Alert, Button, Keyboard, useWindowDimensions, ScrollView } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
-import { useNotes, useTrash, useLabels, useColors } from "@/hooks/useContext";
+import { useNotes, useTrash, useLabels, useColors, useFolders } from "@/hooks/useContext";
 import { Note } from "@/models/Note";
 import CenteredAlert from "@/components/CenteredAlert";
 import { useRoute } from '@react-navigation/native';
@@ -18,7 +18,7 @@ import { calculateTime } from "@/utils/service";
 
 
 export default function EditNote() {
-
+     const { value: folders, addFolder, minusFolder } = useFolders();
      const { value: notes, addNote, minusNote, updateNote } = useNotes();
      const { value: labels, addLabel, minusLabel } = useLabels();
      const { value: trash, addTrash, minusTrash } = useTrash();
@@ -47,6 +47,10 @@ export default function EditNote() {
           handleSubmit(note);
           navigation.navigate('manageLabel', { id: note.id });
      };
+     const deleteNote = () => {
+          minusNote(note);
+          navigation.goBack();
+     }
      const handleSubmit = (note: Note) => {
           if (note.content.trim() === '') {
                setAlertVisible(true);
@@ -56,17 +60,13 @@ export default function EditNote() {
           console.log(note);
           updateNote(note);
      }
-     const deleteNote = () => {
-          minusNote(note);
-          navigation.goBack();
-     }
      useEffect(() => {
           navigation.setOptions({
                headerTitle: 'Note',
                headerLeft: () => (
-                    <StyledComponent component={Ripple} tw='p-2' onPress={() => { handleSubmit(note); navigation.goBack() }} rippleSize={100}>
+                    <StyledComponent component={Ripple} tw='p-2' onPress={() => navigation.goBack()} rippleSize={100}>
                          <StyledComponent component={ThemedText} tw="text-sky-400">
-                              Home
+                              {folders.find(f => f.id == note.folderId)?.name}
                          </StyledComponent>
                     </StyledComponent>
                ),
@@ -97,7 +97,7 @@ export default function EditNote() {
                <CenteredAlert
                     isVisible={alertVisible}
                     title="Warning"
-                    message="Are you sure you want to delete this note?"
+                    message="Content of the note must not be empty"
                     showCancel={true}
                     onConfirm={() => deleteNote()}
                     onCancel={() => setAlertVisible(false)}
@@ -106,7 +106,6 @@ export default function EditNote() {
                     ref={sheetRef}
                     snapPoints={snapPoints}
                     onChange={handleSheetChange}
-                   
                     handleComponent={() => null}
                     keyboardBehavior={undefined}
                     enableOverDrag={false}

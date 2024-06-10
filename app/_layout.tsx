@@ -16,10 +16,10 @@ SplashScreen.preventAutoHideAsync();
 const Context = useAppContext();
 
 export default function RootLayout() {
-  const [notes1, setNotes] = useState<Note[]>(Notes);
-  const [labels1, setLabels] = useState<Label[]>(Labels);
-  const [folders, setFolders] = useState<Folder[]>(Folders);
-  const [trashes1, setTrash] = useState<Note[]>(Trash);
+  const [notes1, setNotes] = useState<Note[]>(Array.from(Notes));
+  const [labels1, setLabels] = useState<Label[]>(Array.from(Labels));
+  const [folders, setFolders] = useState<Folder[]>(Array.from(Folders));
+  const [trashes1, setTrash] = useState<Note[]>(Array.from(Trash));
   const [colors] = useState<string[]>(Colors);
 
   const addNote = (note: Note) => {
@@ -31,6 +31,7 @@ export default function RootLayout() {
   }
 
   const updateNote = (note: Note) => {
+    console.log(note);
     setNotes(notes1.map(n => n.id === note.id ? note : n));
   }
 
@@ -39,7 +40,7 @@ export default function RootLayout() {
   }
 
   const minusLabel = (label: Label) => {
-    setLabels(labels1.filter(l => l !== label));
+    setLabels(labels1.filter(l => l.id !== label.id));
   }
 
   const updateLabel = (label: Label) => {
@@ -51,7 +52,7 @@ export default function RootLayout() {
   }
 
   const minusFolder = (folder: Folder) => {
-    setFolders(folders.filter(f => f !== folder));
+    setFolders(folders.filter(f => f.id !== folder.id));
   }
 
   const updateFolder = (folder: Folder) => {

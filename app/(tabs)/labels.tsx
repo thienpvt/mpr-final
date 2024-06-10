@@ -1,89 +1,99 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { StyleSheet, Image, Platform } from 'react-native';
+import { StyleSheet, Image, Platform, Modal, TouchableOpacity } from 'react-native';
 
 import { Collapsible } from '@/components/Collapsible';
 import { ExternalLink } from '@/components/ExternalLink';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import ParallaxView from '@/components/ParallaxView';
+import { useLabels } from '@/hooks/useContext';
+import { StyledComponent } from 'nativewind';
+import Ripple from 'react-native-material-ripple';
+import { TextInput } from 'react-native-gesture-handler';
+import { useEffect, useState } from 'react';
+import { Label } from '@/models/Label';
+import { useNavigation } from 'expo-router';
 
 export default function LabelsScreen() {
+  const { value: labels, addLabel, minusLabel,updateLabel } = useLabels();
+  const [newLabel, setNewLabel] = useState('');
+  const [label, setLabel] = useState(new Label(0, '') as Label);
+  const [isVisible, setIsVisible] = useState(false);
+  const handleSelected=(selected:any)=> {
+    label.id=selected.id;
+    label.name=selected.name;
+    setIsVisible(true);
+    // throw new Error('Function not implemented.');
+  }
+  const handleInsert=()=> {
+    if(newLabel.trim()==='') return;
+    addLabel(new Label(labels[labels.length-1].id+1,newLabel));
+  }
+  const handleEdit=()=> {
+    console.log(label);
+    updateLabel(label);
+    setIsVisible(false);
+    setLabel(new Label(0,''));
+    // throw new Error('Function not implemented.');
+  }
+
+  const handleDelete=()=> {
+    labels.splice(labels.findIndex((l)=>l.id===label.id),1);
+    minusLabel(label);
+    setLabel(new Label(0,''));
+    setIsVisible(false);
+  }
+  useEffect(() => {
+    setNewLabel('')
+  },[])
   return (
-    <ParallaxScrollView
-      >
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image source={require('@/assets/images/react-logo.png')} style={{ alignSelf: 'center' }} />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Custom fonts">
-        <ThemedText>
-          Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText> to see how to load{' '}
-          <ThemedText style={{ fontFamily: 'SpaceMono' }}>
-            custom fonts such as this one.
-          </ThemedText>
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user's current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful <ThemedText type="defaultSemiBold">react-native-reanimated</ThemedText> library
-          to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+    <ParallaxView
+    >
+      <StyledComponent component={ThemedView} tw='flex flex-row items-center ' >
+        <StyledComponent component={TextInput} onChangeText={(val)=>setNewLabel(val)} tw='w-full px-3 text-base h-14' placeholder='Search or create label...' defaultValue={newLabel}></StyledComponent>
+      </StyledComponent>
+      <StyledComponent component={ThemedView} tw='container bg-transparent gap-3 px-4' >
+        <StyledComponent component={ThemedView} tw='bg-transparent' >
+          <StyledComponent component={ThemedText} type='default'>{labels.length} totals</StyledComponent>
+        </StyledComponent>
+        <StyledComponent component={Ripple} tw='bg-transparent' rippleSize={150} onPress={handleInsert}>
+          <StyledComponent component={ThemedText} type='default' tw='text-blue-400'>+ Create label {newLabel}</StyledComponent>
+        </StyledComponent>
+        <StyledComponent component={ThemedView} tw='flex flex-row bg-transparent flex-wrap'>
+          {labels.map((label) => {
+            if(label.name.includes(newLabel)===false) return;
+            return (
+              <StyledComponent component={Ripple} tw='bg-sky-400 rounded mr-2 p-1 my-1' key={label.id} onPress={()=>handleSelected(label)}>
+                <StyledComponent component={ThemedText} type='label' tw='px-1 text-white'>{label.name}</StyledComponent>
+              </StyledComponent>
+            )
+          })}
+        </StyledComponent>
+      </StyledComponent>
+      <Modal
+      visible={isVisible}
+      transparent={true}
+      animationType="fade" // or 'slide'
+      onRequestClose={()=>setIsVisible(false)}
+    >
+      <StyledComponent component={ThemedView} tw="flex-1 justify-center items-center" style={styles.centeredView}>
+        <StyledComponent component={ThemedView} style={styles.modalView}>
+          <StyledComponent component={ThemedView} tw="mb-7 w-full mt-2">
+            <StyledComponent component={TextInput} tw="text-lg text-gray-500" placeholder='Enter label name' onChangeText={(val)=>label.name=val}>{label.name}</StyledComponent>
+          </StyledComponent>
+          <StyledComponent component={ThemedView} tw="flex flex-row justify-between items-center w-full">
+            <StyledComponent component={Ripple} onPress={handleEdit}>
+              <StyledComponent component={ThemedText} tw="font-bold text-cyan-500 px-6">OK</StyledComponent>
+            </StyledComponent>
+            <StyledComponent component={Ripple}  onPress={handleDelete}>
+              <StyledComponent component={ThemedText}  tw="font-bold text-red-600 px-6">Delete</StyledComponent>
+            </StyledComponent>
+          </StyledComponent>
+        </StyledComponent>
+      </StyledComponent>
+    </Modal>
+    </ParallaxView>
   );
 }
 
@@ -97,5 +107,26 @@ const styles = StyleSheet.create({
   titleContainer: {
     flexDirection: 'row',
     gap: 8,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+  },
+  modalView: {
+    backgroundColor: 'white',
+    borderRadius: 20,
+    width: '80%',
+    padding: 15,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
 });

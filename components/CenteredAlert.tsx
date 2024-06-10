@@ -1,7 +1,10 @@
+import { StyledComponent } from 'nativewind';
 import React, { useState } from 'react';
 import { Modal, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { ThemedView } from './ThemedView';
+import { ThemedText } from './ThemedText';
 
-function CenteredAlert({ isVisible, title, message, onConfirm, onCancel }:any) {
+function CenteredAlert({ isVisible, title, message, onConfirm, onCancel, type='text-red-600', showCancel=false }:any) {
   return (
     <Modal
       visible={isVisible}
@@ -9,20 +12,22 @@ function CenteredAlert({ isVisible, title, message, onConfirm, onCancel }:any) {
       animationType="fade" // or 'slide'
       onRequestClose={onCancel} // Close on hardware back button
     >
-      <View style={styles.centeredView}>
-        <View style={styles.modalView}>
-          <Text style={styles.title}>{title}</Text>
-          <Text style={styles.message}>{message}</Text>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={onConfirm} style={styles.button}>
-              <Text style={styles.buttonOK}>OK</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={onCancel} style={styles.button}>
-              <Text style={styles.buttonCancel}>Cancel</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
+      <StyledComponent component={ThemedView} tw="flex-1 justify-center items-center" style={styles.centeredView}>
+        <StyledComponent component={ThemedView} style={styles.modalView}>
+          <StyledComponent component={ThemedView} tw="mb-5">
+            <StyledComponent component={ThemedText} tw={`text-xl font-bold text-center ${type}`}>{title}</StyledComponent>
+            <StyledComponent component={ThemedText} tw="text-gray-500">{message}</StyledComponent>
+          </StyledComponent>
+          <StyledComponent component={ThemedView} tw="flex-row justify-center items-center gap-5">
+            <StyledComponent component={TouchableOpacity} onPress={onConfirm}>
+              <StyledComponent component={ThemedText} tw="font-bold text-cyan-500">OK</StyledComponent>
+            </StyledComponent>
+            {showCancel&&(<StyledComponent component={TouchableOpacity}  onPress={onCancel}>
+              <StyledComponent component={ThemedText}  tw="font-bold">Cancel</StyledComponent>
+            </StyledComponent>)}
+          </StyledComponent>
+        </StyledComponent>
+      </StyledComponent>
     </Modal>
   );
 }
@@ -37,7 +42,7 @@ const styles = StyleSheet.create({
   modalView: {
     backgroundColor: 'white',
     borderRadius: 20,
-    padding: 20,
+    padding: 15,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
@@ -48,30 +53,36 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
+  titleDanger: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: 'rgb(239 68 68)'
+  },
   title: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 10,
-    color: 'red'
+    color: 'rgb(56 189 248)'
   },
   message: {
     marginBottom: 10,
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '40%',
+    
   },
   button: {
-    borderRadius: 5,
+    // margin: 5,
     padding: 10,
+    backgroundColor: 'rgb(56 189 248)',
+    width: '20%',
   },
   buttonOK: {
-    color: 'rgb(14 165 233)',
     fontWeight: 'bold',
   },
   buttonCancel: {
-    color: 'rgb(147 51 234)',
+
     fontWeight: 'bold',
   },
 });

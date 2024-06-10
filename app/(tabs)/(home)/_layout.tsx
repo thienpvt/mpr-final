@@ -5,7 +5,8 @@ export default function Layout() {
           <Stack>
               <Stack.Screen name="index" />
               <Stack.Screen name="addNote" />
-              <Tabs.Screen name="editNote" />
+              <Stack.Screen name="editNote" />
+              <Stack.Screen name="manageLabel" />
           </Stack>
      )
 }
