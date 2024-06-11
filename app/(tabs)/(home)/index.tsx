@@ -54,7 +54,11 @@ export default function Home() {
     >
 
       <StyledComponent component={ThemedView} tw=' bg-transparent' >
-        <StyledComponent component={ThemedText} type='defaultSemiBold' tw="text-cyan-400">{notes.length} notes</StyledComponent>
+        {search == '' ? (
+          <StyledComponent component={ThemedText} type='defaultSemiBold' tw="text-cyan-400">{notes.length} notes</StyledComponent>
+        ):(
+          <StyledComponent component={ThemedText} tw="text-cyan-300">{notes.filter(x=>x.content.toLowerCase().includes(search.toLowerCase())).length} notes found</StyledComponent>
+        )}
       </StyledComponent>
       {notes.map((note: Note) => {
         if(note.content.toLowerCase().includes(search.toLowerCase()))

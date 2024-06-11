@@ -31,7 +31,7 @@ export default function LabelsScreen() {
     addLabel(new Label(labels[labels.length-1].id+1,newLabel));
   }
   const handleEdit=()=> {
-    console.log(label);
+
     updateLabel(label);
     setIsVisible(false);
     setLabel(new Label(0,''));

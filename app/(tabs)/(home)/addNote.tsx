@@ -28,12 +28,12 @@ export default function AddNote() {
           if (note.content.trim() === '') {
                setAlertContent('Content of the note must not be empty');
                setAlertVisible(true);
-               console.log('empty');
+
                return;
           } else if (notes.find((n) => n.content === note.content) !== undefined){
                setAlertContent('Content of the note must be unique');
                setAlertVisible(true);
-               console.log('unique');
+
                return;
           }
           note.updateAt = new Date();
