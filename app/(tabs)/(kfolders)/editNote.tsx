@@ -18,7 +18,7 @@ import { calculateTime } from "@/utils/service";
 
 
 export default function EditNote() {
-     const { value: folders, addFolder, minusFolder } = useFolders();
+     const { value: folders, addFolder, minusFolder , updateFolder} = useFolders();
      const { value: notes, addNote, minusNote, updateNote } = useNotes();
      const { value: labels, addLabel, minusLabel } = useLabels();
      const { value: trash, addTrash, minusTrash } = useTrash();
@@ -28,6 +28,7 @@ export default function EditNote() {
      const route: any = useRoute();
      const [note, setNote] = useState<Note>(notes.find((note) => note.id ==route.params.id) as Note);
      const navigation: any = useNavigation();
+     const folder: any = folders.find(f => f.id == note.folderId);
      const sheetRef = useRef<BottomSheet>(null);
      // variables
      const snapPoints = useMemo(() => ["10%", "52%"], []);
@@ -48,6 +49,7 @@ export default function EditNote() {
           navigation.navigate('manageLabel', { id: note.id });
      };
      const deleteNote = () => {
+          addTrash(note);
           minusNote(note);
           navigation.goBack();
      }
@@ -56,22 +58,21 @@ export default function EditNote() {
                setAlertVisible(true);
                return;
           }
-          note.updateAt = new Date();
-          console.log(note);
+          updateFolder({...folder,updatedAt:new Date()});
           updateNote(note);
      }
      useEffect(() => {
           navigation.setOptions({
                headerTitle: 'Note',
                headerLeft: () => (
-                    <StyledComponent component={Ripple} tw='p-2' onPress={() => navigation.goBack()} rippleSize={100}>
+                    <StyledComponent component={Ripple} tw='p-2' onPress={() => {handleSubmit(note);navigation.goBack()}} rippleSize={100}>
                          <StyledComponent component={ThemedText} tw="text-sky-400">
                               {folders.find(f => f.id == note.folderId)?.name}
                          </StyledComponent>
                     </StyledComponent>
                ),
           });
-     }, [navigation]);
+     }, [navigation, note]);
 
      return (
           <ParallaxView

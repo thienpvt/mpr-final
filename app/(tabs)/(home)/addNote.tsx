@@ -15,19 +15,28 @@ export default function AddNote() {
      const { value: notes, addNote, minusNote } = useNotes();
      const { value: trash, addTrash, minusTrash } = useTrash();
      const [alertVisible, setAlertVisible] = useState(false);
+     const [alertContent, setAlertContent] = useState('');
      const getId = () => {
-          return trash.length > 0 ? (trash[trash.length - 1].id>notes[notes.length-1].id?trash[trash.length-1].id:notes[notes.length-1].id)+1 : notes.length > 0 ? notes[notes.length - 1].id + 1 : 1;
+          const noteMax=notes.reduce((max, note) => note.id > max ? note.id : max, 0) + 1;
+          const trashMax=trash.reduce((max, note) => note.id > max ? note.id : max, 0) + 1;
+          return noteMax > trashMax ? noteMax : trashMax;
      }
      const tmpNote: Note =new Note( getId(), 'none', [], '', new Date(), false, null);
      
      const navigation: any = useNavigation();
      const handleSubmit = (note: Note) => {
           if (note.content.trim() === '') {
+               setAlertContent('Content of the note must not be empty');
                setAlertVisible(true);
                console.log('empty');
                return;
+          } else if (notes.find((n) => n.content === note.content) !== undefined){
+               setAlertContent('Content of the note must be unique');
+               setAlertVisible(true);
+               console.log('unique');
+               return;
           }
-          tmpNote.updateAt = new Date();
+          note.updateAt = new Date();
           addNote(note);
           navigation.goBack();
      }
@@ -54,7 +63,7 @@ export default function AddNote() {
                <CenteredAlert
                     isVisible={alertVisible}
                     title="Warning"
-                    message="Content of the note must not be empty"
+                    message={alertContent}
                     onConfirm={() => setAlertVisible(false)}
                     onCancel={() => setAlertVisible(false)}
                />

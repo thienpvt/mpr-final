@@ -25,7 +25,6 @@ export default function NotesScreen() {
   const id : string = useLocalSearchParams().id?.toString() || '';
   
   useEffect(() => {
-    console.log(notes)
     if(!id||id=='') navigation.goBack();
       navigation.setOptions({
         headerTitle: '',
@@ -48,7 +47,7 @@ export default function NotesScreen() {
       {notes.map((note: Note) => {
         if(note.folderId == parseInt(id))
           return (
-            <NoteComponent {...note} key={note.id} />
+            <NoteComponent note={note} key={note.id} />
           )
       })}
 

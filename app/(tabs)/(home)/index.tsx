@@ -39,7 +39,7 @@ export default function Home() {
             }} />) :
               (
                 <StyledComponent component={View} tw='flex flex-row items-center border-0 rounded-xl bg-slate-200 h-8'>
-                  <StyledComponent autoFocus={focused} component={TextInput} tw='w-48 px-2' placeholder='Search' onChangeText={(value) => setSearch(value)} onBlur={() => console.log("Focus Lost")} />
+                  <StyledComponent autoFocus={focused} component={TextInput} tw='w-48 px-2' placeholder='Search' onChangeText={(value) => setSearch(value)} onBlur={() => {if(search=='') setFocused(false)}} />
                   <StyledComponent component={Feather} name='x' size={24} color={color} tw='mr-1' onPress={() => setFocused(false)} />
                 </StyledComponent>
               )}
@@ -57,8 +57,9 @@ export default function Home() {
         <StyledComponent component={ThemedText} type='defaultSemiBold' tw="text-cyan-400">{notes.length} notes</StyledComponent>
       </StyledComponent>
       {notes.map((note: Note) => {
+        if(note.content.toLowerCase().includes(search.toLowerCase()))
         return (
-          <NoteComponent {...note} key={note.id} />
+          <NoteComponent note={note} key={note.id} />
         )
       })}
 

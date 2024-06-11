@@ -31,7 +31,6 @@ export default function RootLayout() {
   }
 
   const updateNote = (note: Note) => {
-    console.log(note);
     setNotes(notes1.map(n => n.id === note.id ? note : n));
   }
 

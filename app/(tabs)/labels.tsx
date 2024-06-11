@@ -62,7 +62,7 @@ export default function LabelsScreen() {
         </StyledComponent>
         <StyledComponent component={ThemedView} tw='flex flex-row bg-transparent flex-wrap'>
           {labels.map((label) => {
-            if(label.name.includes(newLabel)===false) return;
+            if(label.name.toLowerCase().includes(newLabel.toLowerCase())===false) return;
             return (
               <StyledComponent component={Ripple} tw='bg-sky-400 rounded mr-2 p-1 my-1' key={label.id} onPress={()=>handleSelected(label)}>
                 <StyledComponent component={ThemedText} type='label' tw='px-1 text-white'>{label.name}</StyledComponent>

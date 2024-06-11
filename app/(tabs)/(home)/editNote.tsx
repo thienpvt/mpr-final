@@ -53,10 +53,10 @@ export default function EditNote() {
                return;
           }
           note.updateAt = new Date();
-          console.log(note);
           updateNote(note);
      }
      const deleteNote = () => {
+          addTrash(note);
           minusNote(note);
           navigation.goBack();
      }
@@ -71,7 +71,7 @@ export default function EditNote() {
                     </StyledComponent>
                ),
           });
-     }, [navigation]);
+     }, [navigation,note]);
 
      return (
           <ParallaxView

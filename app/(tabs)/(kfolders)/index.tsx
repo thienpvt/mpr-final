@@ -34,12 +34,12 @@ export default function FoldersScreen() {
   })
   return (
     <ParallaxScrollView
-
+      showButton={true}
       padding={false}
-
+      pressButton={() => router.push('addFolder')}
     >
       <StyledComponent component={ThemedView} tw=' bg-transparent p-4' >
-        <StyledComponent component={ThemedText} type='defaultSemiBold' tw="text-cyan-500">{folders.length} folders</StyledComponent>
+        <StyledComponent component={ThemedText} type='defaultSemiBold' tw="text-cyan-400">{folders.length} folders</StyledComponent>
       </StyledComponent>
       {folders.map((folder) => {
         return (

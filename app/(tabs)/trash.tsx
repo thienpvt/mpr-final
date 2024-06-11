@@ -19,10 +19,17 @@ import Ripple from 'react-native-material-ripple';
 
 export default function TrashScreen() {
   const { value: notes, addTrash, minusTrash } = useTrash();
+  const { value: notes2, addNote, minusNote } = useNotes();
   const navigation: any = useNavigation();
   const restore = () => {
-    notes.forEach((note) => {
-      addTrash(note);
+    notes.forEach(note => {
+      addNote(note);
+      minusTrash(note);
+    });
+  }
+  const empty = () => {
+    notes.forEach(note => {
+      minusTrash(note);
     });
   }
   return (
@@ -36,14 +43,14 @@ export default function TrashScreen() {
           <StyledComponent component={Ripple} onPress={() => restore()} tw="items-center  bg-slate-200 p-2 px-4 rounded" rippleContainerBorderRadius={50}>
             <StyledComponent component={ThemedText} >Restore</StyledComponent>
           </StyledComponent>
-          <StyledComponent component={Ripple} onPress={() => restore()} tw="items-center bg-red-500 p-2 px-4 rounded" rippleContainerBorderRadius={50}>
+          <StyledComponent component={Ripple} onPress={() => empty()} tw="items-center bg-red-500 p-2 px-4 rounded" rippleContainerBorderRadius={50}>
             <StyledComponent component={ThemedText} tw='text-white'>Empty</StyledComponent>
           </StyledComponent>
         </StyledComponent>
       </StyledComponent>
       {notes.map((note: Note) => {
         return (
-          <NoteComponent {...note} key={note.id} />
+          <NoteComponent note={note} key={note.id} disable/>
         )
       })}
     </ParallaxScrollView>
