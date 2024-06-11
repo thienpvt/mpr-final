@@ -55,6 +55,7 @@ export default function EditNote() {
           }
           updateFolder({...folder,updatedAt:new Date()});
           note.updateAt = new Date();
+
           updateNote(note);
      }
      const deleteNote = () => {
@@ -117,7 +118,11 @@ export default function EditNote() {
                     <StyledComponent component={BottomSheetView} tw='flex-1'>
                          {showHeader ? (<StyledComponent component={ThemedView} tw=' h-14 items-center space-x-2 flex flex-row px-3'>
                               <StyledComponent component={ThemedText} type="hours" tw='basis-1/2'>Edited {calculateTime(note.updateAt)}</StyledComponent>
-                              <StyledComponent component={ThemedView} tw='basis-1/4 items-center bg-transparent'><Ripple rippleContainerBorderRadius={50}><Ionicons name='bookmark-outline' size={24} tw='text-white'></Ionicons></Ripple></StyledComponent>
+                              <StyledComponent component={ThemedView} tw='basis-1/4 items-center bg-transparent'>
+                              <Ripple rippleContainerBorderRadius={50} onPress={()=>{note.isBookmarked=!note.isBookmarked ; handleSubmit(note)}}>
+                                   {note.isBookmarked ? <Ionicons name='bookmark' size={24} ></Ionicons> : <Ionicons name='bookmark-outline' size={24} tw='text-gray-400'></Ionicons>}
+                                   </Ripple>
+                                   </StyledComponent>
                               <StyledComponent component={ThemedView} tw='basis-1/4 items-center bg-transparent'><Ripple rippleContainerBorderRadius={50} onPress={() => handleSnapPress(1)}><Feather name='more-vertical' size={24} tw='text-white'></Feather></Ripple></StyledComponent>
                          </StyledComponent>) :
                               (<StyledComponent component={ThemedView}>

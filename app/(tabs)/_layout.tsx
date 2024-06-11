@@ -52,8 +52,9 @@ export default function Layout() {
           }}
         />
           <Drawer.Screen
-          name="trash" // This is the name of the page and must match the url from root
+          name="(trash)" // This is the name of the page and must match the url from root
           options={{
+            headerShown: false,
             drawerLabel: 'Trash',
             title: 'Trash',
             drawerIcon: ({ color }) => <Feather name="trash-2" size={28} color={color} />,

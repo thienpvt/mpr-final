@@ -14,12 +14,14 @@ import { TextInput } from 'react-native-gesture-handler';
 import { useEffect, useState } from 'react';
 import { Label } from '@/models/Label';
 import { useNavigation } from 'expo-router';
+import { DrawerActions } from '@react-navigation/native';
 
 export default function LabelsScreen() {
   const { value: labels, addLabel, minusLabel,updateLabel } = useLabels();
   const [newLabel, setNewLabel] = useState('');
   const [label, setLabel] = useState(new Label(0, '') as Label);
   const [isVisible, setIsVisible] = useState(false);
+  const navigation: any = useNavigation();
   const handleSelected=(selected:any)=> {
     label.id=selected.id;
     label.name=selected.name;
@@ -45,8 +47,12 @@ export default function LabelsScreen() {
     setIsVisible(false);
   }
   useEffect(() => {
-    setNewLabel('')
-  },[])
+    navigation.setOptions({
+      headerLeft: () => (
+        <StyledComponent component={Ionicons} name='menu' size={24} color='black' tw='ml-4' onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())} />
+      ),
+    });
+  })
   return (
     <ParallaxView
     >

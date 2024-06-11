@@ -18,20 +18,17 @@ import { calculateTime } from "@/utils/service";
 
 
 export default function EditNote() {
-     const { value: folders, addFolder, minusFolder , updateFolder} = useFolders();
-     const { value: notes, addNote, minusNote, updateNote } = useNotes();
+     const { value: trash, addTrash, minusTrash,updateTrash } = useTrash();
      const { value: labels, addLabel, minusLabel } = useLabels();
-     const { value: trash, addTrash, minusTrash } = useTrash();
      const [colors] = useState(Colors)
      const [alertVisible, setAlertVisible] = useState(false);
      const [showHeader, setShowHeader] = useState(true);
      const route: any = useRoute();
-     const [note, setNote] = useState<Note>(notes.find((note) => note.id ==route.params.id) as Note);
+     const [note, setNote] = useState<Note>(trash.find((note) => note.id ==route.params.id) as Note);
      const navigation: any = useNavigation();
-     const folder: any = folders.find(f => f.id == note.folderId);
      const sheetRef = useRef<BottomSheet>(null);
      // variables
-     const snapPoints = useMemo(() => ["10%", "52%"], []);
+     const snapPoints = useMemo(() => ["10%", "47%"], []);
 
      // callbacks
      const handleSheetChange = useCallback((index: any) => {
@@ -48,32 +45,28 @@ export default function EditNote() {
           handleSubmit(note);
           navigation.navigate('manageLabel', { id: note.id });
      };
-     const deleteNote = () => {
-          addTrash(note);
-          minusNote(note);
-          navigation.goBack();
-     }
      const handleSubmit = (note: Note) => {
           if (note.content.trim() === '') {
                setAlertVisible(true);
                return;
           }
-          updateFolder({...folder,updatedAt:new Date()});
-          updateNote(note);
+          note.updateAt = new Date();
+
+          updateTrash(note);
      }
+
      useEffect(() => {
           navigation.setOptions({
                headerTitle: 'Note',
                headerLeft: () => (
-                    <StyledComponent component={Ripple} tw='p-2' onPress={() => {handleSubmit(note);navigation.goBack()}} rippleSize={100}>
+                    <StyledComponent component={Ripple} tw='p-2' onPress={() => { handleSubmit(note); navigation.goBack() }} rippleSize={100}>
                          <StyledComponent component={ThemedText} tw="text-sky-400">
-                              {folders.find(f => f.id == note.folderId)?.name}
+                              Trash
                          </StyledComponent>
                     </StyledComponent>
                ),
           });
-     }, [navigation, note]);
-
+        })
      return (
           <ParallaxView
           >
@@ -95,18 +88,11 @@ export default function EditNote() {
                     multiline={true}
                >
                </StyledComponent>
-               <CenteredAlert
-                    isVisible={alertVisible}
-                    title="Warning"
-                    message="Content of the note must not be empty"
-                    showCancel={true}
-                    onConfirm={() => deleteNote()}
-                    onCancel={() => setAlertVisible(false)}
-               />
                <BottomSheet
                     ref={sheetRef}
                     snapPoints={snapPoints}
                     onChange={handleSheetChange}
+                   
                     handleComponent={() => null}
                     keyboardBehavior={undefined}
                     enableOverDrag={false}
@@ -115,9 +101,11 @@ export default function EditNote() {
                     <StyledComponent component={BottomSheetView} tw='flex-1'>
                          {showHeader ? (<StyledComponent component={ThemedView} tw=' h-14 items-center space-x-2 flex flex-row px-3'>
                               <StyledComponent component={ThemedText} type="hours" tw='basis-1/2'>Edited {calculateTime(note.updateAt)}</StyledComponent>
-                              <StyledComponent component={ThemedView} tw='basis-1/4 items-center bg-transparent'><Ripple rippleContainerBorderRadius={50} onPress={()=>{note.isBookmarked=!note.isBookmarked ; handleSubmit(note)}}>
+                              <StyledComponent component={ThemedView} tw='basis-1/4 items-center bg-transparent'>
+                              <Ripple rippleContainerBorderRadius={50} onPress={()=>{note.isBookmarked=!note.isBookmarked ; handleSubmit(note)}}>
                                    {note.isBookmarked ? <Ionicons name='bookmark' size={24} ></Ionicons> : <Ionicons name='bookmark-outline' size={24} tw='text-gray-400'></Ionicons>}
-                                   </Ripple></StyledComponent>
+                                   </Ripple>
+                                   </StyledComponent>
                               <StyledComponent component={ThemedView} tw='basis-1/4 items-center bg-transparent'><Ripple rippleContainerBorderRadius={50} onPress={() => handleSnapPress(1)}><Feather name='more-vertical' size={24} tw='text-white'></Feather></Ripple></StyledComponent>
                          </StyledComponent>) :
                               (<StyledComponent component={ThemedView}>
@@ -171,10 +159,10 @@ export default function EditNote() {
                                         <StyledComponent component={ThemedText} tw='px-2'>Share</StyledComponent>
                                    </StyledComponent>
 
-                                   <StyledComponent component={Ripple} tw=' h-12 items-center px-2 flex flex-row' onPress={()=>setAlertVisible(true)}>
+                                   {/* <StyledComponent component={Ripple} tw=' h-12 items-center px-2 flex flex-row' onPress={()=>setAlertVisible(true)}>
                                         <Ionicons name='trash-outline' size={24} color="rgb(107 114 128)"></Ionicons>
                                         <StyledComponent component={ThemedText} tw='px-2'>Delete</StyledComponent>
-                                   </StyledComponent>
+                                   </StyledComponent> */}
 
                                    <StyledComponent component={Ripple} tw=' h-12 items-center px-2 flex flex-row'>
                                         <Ionicons name='copy-outline' size={24} color="rgb(107 114 128)"></Ionicons>

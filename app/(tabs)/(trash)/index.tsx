@@ -32,6 +32,13 @@ export default function TrashScreen() {
       minusTrash(note);
     });
   }
+  useEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <Ionicons name='menu' size={24} color='black' onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())} />
+      ),
+    });
+  })
   return (
     <ParallaxScrollView
       showButton={true}
@@ -50,7 +57,7 @@ export default function TrashScreen() {
       </StyledComponent>
       {notes.map((note: Note) => {
         return (
-          <NoteComponent note={note} key={note.id} disable/>
+          <NoteComponent note={note} key={note.id}/>
         )
       })}
     </ParallaxScrollView>

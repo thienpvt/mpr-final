@@ -19,9 +19,9 @@ export default function NoteComponent({ note, disable = false }: Props) {
      return (
           <StyledComponent component={Ripple} onPress={() => { if (!disable) navigation.navigate('editNote', { id: note.id }) }} rippleContainerBorderRadius={5} rippleColor="rgb(249 168 212)">
                <StyledComponent component={ThemedView} tw='rounded p-5'>
-                    <StyledComponent component={ThemedView} tw='flex flex-row items-center mb-1 w-full px-2'>
+                    <StyledComponent component={ThemedView} tw='flex flex-row items-center mb-1 w-full'>
                          <StyledComponent component={ThemedView} tw='flex flex-row items-center w-1/2'>
-                              {note.color != 'none' && <StyledComponent component={ThemedView} tw={`w-4 h-4 rounded-full  mr-2`} style={{ backgroundColor: note.color }}></StyledComponent>}
+                              {note.color != 'none' && <StyledComponent component={ThemedView} tw={`w-4 h-4 rounded-full  mx-2`} style={{ backgroundColor: note.color }}></StyledComponent>}
                               <StyledComponent component={ThemedText} type='hours'>{ }
                                    {calculateTime(note.updateAt as Date)}
                               </StyledComponent>
