@@ -21,6 +21,7 @@ export default function LabelsScreen() {
   const [newLabel, setNewLabel] = useState('');
   const [label, setLabel] = useState(new Label(0, '') as Label);
   const [isVisible, setIsVisible] = useState(false);
+  const [error, setError] = useState(false);
   const navigation: any = useNavigation();
   const handleSelected=(selected:any)=> {
     label.id=selected.id;
@@ -32,8 +33,11 @@ export default function LabelsScreen() {
     if(newLabel.trim()==='') return;
     addLabel(new Label(labels[labels.length-1].id+1,newLabel));
   }
-  const handleEdit=()=> {
-
+  const handleEdit=(label:Label)=> {
+    if(label.name.trim()==='') {
+      setError(true);
+      return;
+    }
     updateLabel(label);
     setIsVisible(false);
     setLabel(new Label(0,''));
@@ -86,10 +90,11 @@ export default function LabelsScreen() {
       <StyledComponent component={ThemedView} tw="flex-1 justify-center items-center" style={styles.centeredView}>
         <StyledComponent component={ThemedView} style={styles.modalView}>
           <StyledComponent component={ThemedView} tw="mb-7 w-full mt-2">
-            <StyledComponent component={TextInput} tw="text-lg text-gray-500" placeholder='Enter label name' onChangeText={(val)=>label.name=val}>{label.name}</StyledComponent>
+            <StyledComponent component={TextInput} multiline tw="border rounded-xl p-2 text-lg text-gray-500" placeholder='Enter label name' onChangeText={(val)=>{setError(false); label.name=val}}>{label.name}</StyledComponent>
+            {error && <StyledComponent component={ThemedText} tw="text-red-500 text-sm">Label name cannot be empty</StyledComponent>}
           </StyledComponent>
           <StyledComponent component={ThemedView} tw="flex flex-row justify-between items-center w-full">
-            <StyledComponent component={Ripple} onPress={handleEdit}>
+            <StyledComponent component={Ripple} onPress={()=>handleEdit(label)}>
               <StyledComponent component={ThemedText} tw="font-bold text-cyan-500 px-6">OK</StyledComponent>
             </StyledComponent>
             <StyledComponent component={Ripple}  onPress={handleDelete}>
