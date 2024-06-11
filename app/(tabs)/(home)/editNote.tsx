@@ -5,7 +5,7 @@ import { StyledComponent } from "nativewind";
 import { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import { View, Text, TextInput, Alert, Button, Keyboard, useWindowDimensions, ScrollView } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
-import { useNotes, useTrash, useLabels, useColors } from "@/hooks/useContext";
+import { useNotes, useTrash, useLabels, useColors, useFolders } from "@/hooks/useContext";
 import { Note } from "@/models/Note";
 import CenteredAlert from "@/components/CenteredAlert";
 import { useRoute } from '@react-navigation/native';
@@ -18,7 +18,7 @@ import { calculateTime } from "@/utils/service";
 
 
 export default function EditNote() {
-
+     const { value: folders, addFolder, minusFolder , updateFolder} = useFolders();
      const { value: notes, addNote, minusNote, updateNote } = useNotes();
      const { value: labels, addLabel, minusLabel } = useLabels();
      const { value: trash, addTrash, minusTrash } = useTrash();
@@ -27,6 +27,7 @@ export default function EditNote() {
      const [showHeader, setShowHeader] = useState(true);
      const route: any = useRoute();
      const [note, setNote] = useState<Note>(notes.find((note) => note.id ==route.params.id) as Note);
+     const folder: any= folders.find(f => f.id == note.folderId);
      const navigation: any = useNavigation();
      const sheetRef = useRef<BottomSheet>(null);
      // variables
@@ -52,6 +53,7 @@ export default function EditNote() {
                setAlertVisible(true);
                return;
           }
+          updateFolder({...folder,updatedAt:new Date()});
           note.updateAt = new Date();
           updateNote(note);
      }
