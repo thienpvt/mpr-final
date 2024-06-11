@@ -31,9 +31,9 @@ export const Folders: Folder[] = [
 
 export const Notes: Note[] = [
      new Note(1, "yellow", [1, 2, 3], "React Native is a framework for building mobile applications using JavaScript and React", new Date('2024-04-10T12:30:00'), false, 1),
-     new Note(2, "gray", [2], "The final exam will be held on 20th December 2021", new Date('2024-04-10T12:35:00'), false, 3),
-     new Note(3, "pink", [3], "The mini project is due on 15th December 2021", new Date('2024-04-10T12:36:00'), false, 3),
-     new Note(4, "red", [4], "Team work is important", new Date('2024-04-10T12:40:00'), false, 4),
+     new Note(2, "gray", [2], "The final exam will be held on 20th December 2021", new Date('2024-04-10T12:35:00'), true, 3),
+     new Note(3, "pink", [3], "The mini project is due on 15th December 2021", new Date('2024-04-10T12:36:00'), true, 3),
+     new Note(4, "red", [4], "Team work is important", new Date('2024-04-10T12:40:00'), true, 4),
      new Note(5, "pink", [5], "React is a JavaScript library for building user interfaces", new Date('2024-04-10T12:50:00'), false, 2),
 ];
 

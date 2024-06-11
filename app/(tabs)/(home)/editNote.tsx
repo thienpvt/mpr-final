@@ -68,7 +68,7 @@ export default function EditNote() {
                headerLeft: () => (
                     <StyledComponent component={Ripple} tw='p-2' onPress={() => { handleSubmit(note); navigation.goBack() }} rippleSize={100}>
                          <StyledComponent component={ThemedText} tw="text-sky-400">
-                              Home
+                              Menus
                          </StyledComponent>
                     </StyledComponent>
                ),
@@ -117,7 +117,7 @@ export default function EditNote() {
                     <StyledComponent component={BottomSheetView} tw='flex-1'>
                          {showHeader ? (<StyledComponent component={ThemedView} tw=' h-14 items-center space-x-2 flex flex-row px-3'>
                               <StyledComponent component={ThemedText} type="hours" tw='basis-1/2'>Edited {calculateTime(note.updateAt)}</StyledComponent>
-                              <StyledComponent component={ThemedView} tw='basis-1/4 items-center bg-transparent'><Ripple rippleContainerBorderRadius={50}><Feather name='bookmark' size={24} tw='text-white'></Feather></Ripple></StyledComponent>
+                              <StyledComponent component={ThemedView} tw='basis-1/4 items-center bg-transparent'><Ripple rippleContainerBorderRadius={50}><Ionicons name='bookmark-outline' size={24} tw='text-white'></Ionicons></Ripple></StyledComponent>
                               <StyledComponent component={ThemedView} tw='basis-1/4 items-center bg-transparent'><Ripple rippleContainerBorderRadius={50} onPress={() => handleSnapPress(1)}><Feather name='more-vertical' size={24} tw='text-white'></Feather></Ripple></StyledComponent>
                          </StyledComponent>) :
                               (<StyledComponent component={ThemedView}>

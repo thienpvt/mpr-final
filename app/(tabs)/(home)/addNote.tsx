@@ -2,7 +2,7 @@ import { ThemedText } from "@/components/ThemedText";
 import Ripple from 'react-native-material-ripple';
 import { useNavigation } from "expo-router";
 import { StyledComponent } from "nativewind";
-import { useEffect, useState, useCallback, useRef, useMemo  } from "react";
+import { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import { View, Text, TextInput, Alert, Button } from "react-native";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedView } from "@/components/ThemedView";
@@ -17,12 +17,12 @@ export default function AddNote() {
      const [alertVisible, setAlertVisible] = useState(false);
      const [alertContent, setAlertContent] = useState('');
      const getId = () => {
-          const noteMax=notes.reduce((max, note) => note.id > max ? note.id : max, 0) + 1;
-          const trashMax=trash.reduce((max, note) => note.id > max ? note.id : max, 0) + 1;
+          const noteMax = notes.reduce((max, note) => note.id > max ? note.id : max, 0) + 1;
+          const trashMax = trash.reduce((max, note) => note.id > max ? note.id : max, 0) + 1;
           return noteMax > trashMax ? noteMax : trashMax;
      }
-     const tmpNote: Note =new Note( getId(), 'none', [], '', new Date(), false, null);
-     
+     const tmpNote: Note = new Note(getId(), 'none', [], '', new Date(), false, null);
+
      const navigation: any = useNavigation();
      const handleSubmit = (note: Note) => {
           if (note.content.trim() === '') {
@@ -30,7 +30,7 @@ export default function AddNote() {
                setAlertVisible(true);
 
                return;
-          } else if (notes.find((n) => n.content === note.content) !== undefined){
+          } else if (notes.find((n) => n.content === note.content) !== undefined) {
                setAlertContent('Content of the note must be unique');
                setAlertVisible(true);
 
@@ -46,7 +46,7 @@ export default function AddNote() {
                headerLeft: () => (
                     <StyledComponent component={Ripple} tw='p-2' onPress={() => navigation.goBack()} rippleSize={100}>
                          <StyledComponent component={ThemedText} tw="text-sky-400">
-                              Home
+                              Menus
                          </StyledComponent>
                     </StyledComponent>
                ),
