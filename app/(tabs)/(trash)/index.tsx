@@ -18,19 +18,15 @@ import Ripple from 'react-native-material-ripple';
 
 
 export default function TrashScreen() {
-  const { value: notes, addTrash, minusTrash } = useTrash();
-  const { value: notes2, addNote, minusNote } = useNotes();
+  const { value: notes, addTrash, minusTrash, emptyTrash } = useTrash();
+  const { value: notes2, addNote, minusNote, addAllNotes } = useNotes();
   const navigation: any = useNavigation();
   const restore = () => {
-    notes.forEach(note => {
-      addNote(note);
-      minusTrash(note);
-    });
+    addAllNotes(notes);
+    emptyTrash();
   }
   const empty = () => {
-    notes.forEach(note => {
-      minusTrash(note);
-    });
+    emptyTrash();
   }
   useEffect(() => {
     navigation.setOptions({
@@ -38,7 +34,7 @@ export default function TrashScreen() {
         <Ionicons name='menu' size={24} color='black' onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())} />
       ),
     });
-  })
+  },[navigation, notes])
   return (
     <ParallaxScrollView
       showButton={true}

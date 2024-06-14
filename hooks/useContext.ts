@@ -4,10 +4,10 @@ import { Note } from "@/models/Note";
 import { createContext, useContext } from "react";
 
 const AppContext = createContext({
-     notes: { value: <Note[]>[], addNote: (node:Note) => {}, minusNote: (node:Note) => {}, updateNote: (node:Note) => {}},
+     notes: { value: <Note[]>[], addNote: (node:Note) => {}, minusNote: (node:Note) => {}, updateNote: (node:Note) => {}, addAllNotes: (notes:Note[]) => {}},
      labels: { value: <Label[]>[], addLabel: (label:Label) => {}, minusLabel: (label:Label) => {}, updateLabel: (label:Label) => {}},
      folders: { value: <Folder[]>[], addFolder: (folder:Folder) => {}, minusFolder: (folder:Folder) => {}, updateFolder: (folder:Folder) => {}},
-     trash: { value: <Note[]>[], addTrash: (note:Note) => {}, minusTrash: (note:Note) => {}, updateTrash: (note:Note) => {}},
+     trash: { value: <Note[]>[], addTrash: (note:Note) => {}, minusTrash: (note:Note) => {}, updateTrash: (note:Note) => {}, emptyTrash: () => {}},
      colors: { value: <string[]>[]},
 });
 

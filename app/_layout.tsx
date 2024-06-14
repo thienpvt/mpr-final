@@ -34,6 +34,10 @@ export default function RootLayout() {
     setNotes(notes1.map(n => n.id === note.id ? note : n));
   }
 
+  const addAllNotes = (notes: Note[]) => {
+    setNotes([...notes1, ...notes]);
+  }
+
   const addLabel = (label: Label) => {
     setLabels([...labels1, label]);
   }
@@ -70,6 +74,10 @@ export default function RootLayout() {
     setTrash(trashes1.map(n => n.id === note.id ? note : n));
   }
 
+  const emptyTrash = () => {
+    setTrash([]);
+  }
+
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
@@ -88,7 +96,7 @@ export default function RootLayout() {
   return (
     <Context.Provider value={{
       notes: {
-        value: notes1, addNote, minusNote, updateNote
+        value: notes1, addNote, minusNote, updateNote, addAllNotes
       },
       labels: {
         value: labels1, addLabel, minusLabel, updateLabel
@@ -97,7 +105,7 @@ export default function RootLayout() {
         value: folders, addFolder, minusFolder, updateFolder
       },
       trash: {
-        value: trashes1, addTrash, minusTrash, updateTrash
+        value: trashes1, addTrash, minusTrash, updateTrash, emptyTrash
       },
       colors: {
         value: colors
